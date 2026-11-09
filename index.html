@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#101c22" />
+  <title>Avatar: The Four Elements</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Marcellus&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="game"></div>
+  <div id="vignette"></div>
+  <header id="topbar" class="hud hidden">
+    <div class="brand-mark"><span>✦</span></div>
+    <div class="location"><small>THE FOUR NATIONS · SOUTHERN REACH</small><strong id="locationName">Whispering Coast</strong></div>
+    <div class="daytime"><span class="sun-icon">☼</span><div><small id="weather">CLEAR SKIES</small><strong id="clock">DAY 01 · 08:40</strong></div></div>
+    <button class="icon-btn map-btn" id="mapToggle" title="Map (M)">⌖</button>
+  </header>
+  <section id="quest-card" class="hud hidden">
+    <div class="quest-kicker"><span class="quest-dot"></span> JOURNAL · MAIN STORY</div>
+    <strong id="questTitle">A call from the coast</strong>
+    <p id="questText">Speak with Master Nima at the overlook.</p>
+    <div class="quest-progress"><i></i></div>
+  </section>
+  <div id="interaction" class="hidden"><span class="keycap">E</span><span id="interactionText">Talk</span></div>
+  <div id="toast" class="toast"></div>
+  <div id="center-reticle" class="hidden"><i></i></div>
+  <footer id="bottom-hud" class="hud hidden">
+    <div class="player-card"><div class="avatar-badge" id="avatarBadge">✦</div><div class="player-meta"><div><b id="playerNameHud">Wanderer</b><span id="levelText">LVL 01</span></div><div class="xp-track"><i id="xpFill"></i></div></div></div>
+    <div class="vitals"><div class="bar-row"><span class="bar-symbol heart">♥</span><div class="bar-track"><i id="healthFill"></i></div><b id="healthText">100 / 100</b></div><div class="bar-row"><span class="bar-symbol energy">✧</span><div class="bar-track"><i id="energyFill"></i></div><b id="energyText">100 / 100</b></div></div>
+    <div class="hotbar" id="hotbar"></div>
+    <button class="inventory-button" id="inventoryToggle"><span>▤</span><b>PACK</b><kbd>I</kbd></button>
+  </footer>
+  <div id="opening" class="screen-overlay">
+    <div class="opening-art"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="four-mark"><span>水</span><span>土</span><span>火</span><span>風</span></div><div class="opening-caption">A world shaped by the elements</div></div>
+    <div class="creation-panel">
+      <div class="eyebrow">A NEW JOURNEY BEGINS</div>
+      <h1>Find your<br><em>element.</em></h1>
+      <p class="intro-copy">The balance of the nations is shifting. Your story begins on a quiet shore, where an ancient current is calling.</p>
+      <label class="field-label" for="heroName">YOUR NAME</label>
+      <input id="heroName" maxlength="18" value="Kaya" autocomplete="off" />
+      <div class="field-label nation-label">CHOOSE YOUR HOMELAND</div>
+      <div id="nationChoices" class="nation-choices">
+        <button class="nation-choice selected" data-nation="Water"><span class="nation-symbol water-symbol">水</span><span><b>Water Tribe</b><small>Patient · Adaptable</small></span><i>✓</i></button>
+        <button class="nation-choice" data-nation="Earth"><span class="nation-symbol earth-symbol">土</span><span><b>Earth Kingdom</b><small>Steadfast · Resilient</small></span><i>✓</i></button>
+        <button class="nation-choice" data-nation="Fire"><span class="nation-symbol fire-symbol">火</span><span><b>Fire Nation</b><small>Bold · Focused</small></span><i>✓</i></button>
+        <button class="nation-choice" data-nation="Air"><span class="nation-symbol air-symbol">風</span><span><b>Air Nomads</b><small>Free · Curious</small></span><i>✓</i></button>
+      </div>
+      <div class="origin-note"><span>✧</span><span><b>Your path is your own.</b> Only the Avatar can master all four elements.</span></div>
+      <button class="primary-button" id="beginButton">BEGIN YOUR JOURNEY <span>→</span></button>
+      <div class="control-hint">WASD MOVE <i>·</i> SPACE JUMP <i>·</i> CLICK BEND <i>·</i> E INTERACT</div>
+    </div>
+  </div>
+  <div id="inventoryPanel" class="modal hidden"><div class="modal-card inventory-card"><button class="close-modal" data-close>×</button><div class="eyebrow">YOUR BELONGINGS</div><h2>Traveler's pack</h2><p class="muted">A few useful things gathered along the way.</p><div class="inventory-tabs"><button class="active">ALL <span>8</span></button><button>GEAR</button><button>CONSUMABLES</button><button>MATERIALS</button></div><div class="items-grid" id="itemsGrid"></div><div class="pack-footer"><span>PACK CAPACITY</span><b>8 / 24</b><div class="pack-track"><i></i></div></div></div></div>
+  <div id="mapPanel" class="modal hidden"><div class="modal-card map-card"><button class="close-modal" data-close>×</button><div class="eyebrow">SOUTHERN REACH</div><h2>World map</h2><div class="map-content"><div class="map-art"><span class="map-water">SOUTHERN OCEAN</span><div class="map-island"><div class="map-path"></div><span class="map-pin player-pin">✦</span><span class="map-pin village-pin">⌂</span><span class="map-pin temple-pin">△</span><label>WHISPERING COAST</label></div></div><div class="map-legend"><b>KNOWN PLACES</b><p>✦ &nbsp;You are here</p><p>⌂ &nbsp;Tideglass Village</p><p>△ &nbsp;Old Moon Shrine</p><div class="map-note">Beyond the southern sea lie the four great nations. The wider world awaits discovery.</div></div></div></div></div>
+  <div id="dialoguePanel" class="dialogue hidden"><div class="dialogue-avatar" id="dialogueAvatar">N</div><div class="dialogue-body"><div class="eyebrow" id="dialogueRole">WATERBENDING MASTER</div><h2 id="dialogueName">Master Nima</h2><p id="dialogueText">The tide has been restless all morning. Perhaps it has been waiting for you.</p><div class="dialogue-actions" id="dialogueActions"></div></div><button class="close-modal dialogue-close" data-close>×</button></div>
+  <div id="levelUp" class="levelup hidden"><span>✦</span><div><small>YOUR JOURNEY DEEPENS</small><b>LEVEL UP</b></div><strong id="newLevel">02</strong></div>
+  <div id="mobileControls" class="hidden"><div class="touch-stick" id="touchStick"><div></div></div><div class="touch-actions"><button data-touch="jump">↑</button><button data-touch="bend">✦</button><button data-touch="interact">E</button></div></div>
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js"}}</script>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
