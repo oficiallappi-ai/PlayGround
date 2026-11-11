@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#090c14">
+<title>Concrete Dreams — Skatepark Session</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap');
+:root{--ink:#090c14;--paper:#f5f2e9;--muted:#a5a9b5;--pink:#ff4e83;--cyan:#59e2df;--lime:#d8ff58}
+*{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;background:var(--ink);color:var(--paper);font-family:'Barlow Condensed',sans-serif}canvas{display:block;width:100%;height:100%;outline:none}
+#game{position:fixed;inset:0}#hud{position:absolute;inset:0;pointer-events:none;display:none}.topbar{position:absolute;top:24px;left:28px;right:28px;display:flex;align-items:flex-start;justify-content:space-between}.brand{font-weight:900;font-size:19px;letter-spacing:.13em;text-transform:uppercase;line-height:1}.brand small{display:block;color:var(--muted);font:10px 'DM Mono',monospace;letter-spacing:.12em;margin-top:6px}.timerbox{text-align:center}.timer{font:800 42px/.9 'Barlow Condensed',sans-serif;letter-spacing:.04em}.timerlabel{font:9px 'DM Mono',monospace;color:var(--muted);letter-spacing:.22em;margin-top:6px}.scorebox{text-align:right}.score{font:800 31px/.9 'Barlow Condensed',sans-serif;color:var(--lime)}.scorelabel{font:9px 'DM Mono',monospace;color:var(--muted);letter-spacing:.2em;margin-top:6px}.sessionline{position:absolute;left:28px;top:101px;font:10px 'DM Mono',monospace;color:var(--muted);letter-spacing:.12em}.combo{position:absolute;left:50%;top:19%;transform:translateX(-50%);text-align:center;opacity:0;transition:opacity .15s;text-shadow:0 3px 20px #000}.combo.show{opacity:1}.combo strong{display:block;color:var(--pink);font:900 clamp(32px,5vw,68px)/.9 'Barlow Condensed',sans-serif;font-style:italic;letter-spacing:.04em}.combo span{display:block;font:11px 'DM Mono',monospace;color:white;letter-spacing:.18em;margin-top:8px}.trickfeed{position:absolute;right:28px;top:100px;text-align:right;font:11px 'DM Mono',monospace;color:var(--cyan);line-height:1.9;letter-spacing:.04em}.speed{position:absolute;bottom:25px;left:28px;display:flex;align-items:baseline;gap:7px}.speed b{font:800 30px 'Barlow Condensed',sans-serif}.speed span{font:9px 'DM Mono',monospace;color:var(--muted);letter-spacing:.18em}.controls{position:absolute;bottom:25px;right:28px;text-align:right;color:var(--muted);font:9px/1.8 'DM Mono',monospace;letter-spacing:.04em}.controls b{color:var(--paper);font-weight:500}.runbar{position:absolute;left:50%;bottom:0;transform:translateX(-50%);height:3px;width:min(410px,45vw);background:#ffffff24}.runbar i{display:block;height:100%;width:100%;background:var(--pink);transform-origin:left;transition:transform .2s linear}
+.overlay{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(90deg,rgba(7,10,17,.88),rgba(7,10,17,.24) 70%),linear-gradient(0deg,rgba(7,10,17,.6),transparent 40%);}.panel{width:min(590px,90vw);margin-left:min(32vw,350px);padding:24px 20px}.eyebrow{font:10px 'DM Mono',monospace;letter-spacing:.28em;color:var(--cyan);text-transform:uppercase;display:flex;align-items:center;gap:10px}.eyebrow:before{content:'';height:1px;width:28px;background:var(--cyan)}h1{font:900 clamp(54px,8vw,104px)/.78 'Barlow Condensed',sans-serif;letter-spacing:-.03em;text-transform:uppercase;margin:22px 0 20px}.title-accent{color:var(--pink);font-style:italic}.desc{font-size:17px;line-height:1.2;color:#c1c3c9;max-width:380px;margin:0 0 27px}.startrow{display:flex;align-items:center;gap:17px}.startbtn{pointer-events:auto;border:0;background:var(--lime);padding:14px 28px;color:#0b0e13;font:900 15px 'Barlow Condensed',sans-serif;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:transform .15s,background .15s}.startbtn:hover{transform:translateY(-2px);background:#e5ff83}.hint{font:9px/1.6 'DM Mono',monospace;color:#9da1ad;letter-spacing:.07em}.key{display:inline-block;border:1px solid #636772;border-radius:2px;padding:1px 5px;color:white;margin:0 1px}.stats{display:flex;gap:25px;margin-top:33px;padding-top:15px;border-top:1px solid #ffffff25}.stat b{display:block;font:700 19px 'Barlow Condensed',sans-serif}.stat span{font:8px 'DM Mono',monospace;color:#9da1ad;letter-spacing:.13em}.endpanel{display:none}.endpanel h2{font:900 clamp(44px,7vw,78px)/.86 'Barlow Condensed',sans-serif;margin:19px 0;color:var(--lime);text-transform:uppercase}.endpanel .finalscore{color:var(--pink)}
+#touch{display:none;pointer-events:none;position:absolute;inset:0}.touchstick{position:absolute;bottom:26px;left:24px;width:112px;height:112px;border-radius:50%;background:#ffffff15;border:1px solid #ffffff44;pointer-events:auto;touch-action:none}.touchstick:after{content:'';position:absolute;left:50%;top:50%;width:38px;height:38px;border-radius:50%;background:#ffffff55;transform:translate(-50%,-50%)}.touchbuttons{position:absolute;right:22px;bottom:25px;display:flex;gap:9px;pointer-events:auto}.touchbuttons button{touch-action:none;width:52px;height:52px;border-radius:50%;border:1px solid #ffffff70;color:white;background:#10151dcc;font:700 10px 'DM Mono',monospace}.touchbuttons button:first-child{background:#ff4e83cc;border:0}
+@media(max-width:700px){.topbar{top:15px;left:16px;right:16px}.brand{font-size:15px}.brand small{font-size:8px}.timer{font-size:34px}.score{font-size:26px}.sessionline{left:16px;top:82px;font-size:8px}.trickfeed{right:15px;top:85px;font-size:9px}.speed{left:16px;bottom:155px}.controls{display:none}.panel{margin:0;padding:16px}h1{font-size:66px}.desc{font-size:15px}.stats{margin-top:22px}.startrow{align-items:flex-start;flex-direction:column;gap:10px}.overlay{background:linear-gradient(90deg,rgba(7,10,17,.83),rgba(7,10,17,.25)),linear-gradient(0deg,rgba(7,10,17,.72),transparent 60%)}#touch{display:block}.runbar{width:50vw}.combo{top:22%}}
+</style>
+</head>
+<body>
+<div id="game"></div>
+<div id="hud">
+ <div class="topbar"><div class="brand">Concrete Dreams<small>STREET SESSION // NO. 01</small></div><div class="timerbox"><div class="timer" id="timer">2:00</div><div class="timerlabel">TIME LEFT</div></div><div class="scorebox"><div class="score" id="score">000000</div><div class="scorelabel">SESSION SCORE</div></div></div>
+ <div class="sessionline">SOUTH BANK PLAZA&nbsp; / &nbsp;FREE SKATE</div><div class="combo" id="combo"><strong id="comboTitle">BIG AIR</strong><span id="comboValue">+0 PTS</span></div><div class="trickfeed" id="trickfeed"></div><div class="speed"><b id="speed">0</b><span>KM/H</span></div><div class="controls"><b>W A S D</b> MOVE &nbsp; <b>SPACE</b> OLLIE<br><b>Z / X / C</b> TRICKS &nbsp; <b>SHIFT</b> POWERSLIDE</div><div class="runbar"><i id="runbar"></i></div>
+</div>
+<div class="overlay" id="overlay"><div class="panel" id="startpanel"><div class="eyebrow">A 2-MINUTE ARCADE RUN</div><h1>Own the<br><span class="title-accent">concrete.</span></h1><p class="desc">Drop in, find your line, and stack a monster score. Hit the ramps, lock into rails, and bring it all home.</p><div class="startrow"><button class="startbtn" id="startbtn">Start your run&nbsp; ↗</button><div class="hint"><span class="key">WASD</span> RIDE &nbsp; <span class="key">SPACE</span> OLLIE<br><span class="key">Z</span> KICKFLIP &nbsp; <span class="key">X</span> SHUVIT &nbsp; <span class="key">C</span> 360</div></div><div class="stats"><div class="stat"><b>120 SEC</b><span>ON THE CLOCK</span></div><div class="stat"><b>NO LIMITS</b><span>ALL PARK OPEN</span></div><div class="stat"><b>MAKE IT COUNT</b><span>LAND YOUR TRICKS</span></div></div></div><div class="panel endpanel" id="endpanel"><div class="eyebrow">SESSION COMPLETE</div><h2>That's a<br><span class="finalscore">wrap.</span></h2><p class="desc" id="endcopy">The park is yours. One more run?</p><button class="startbtn" id="restartbtn">Skate again&nbsp; ↗</button><div class="stats"><div class="stat"><b id="bestscore">000000</b><span>YOUR RUN</span></div><div class="stat"><b>2:00</b><span>WELL SPENT</span></div></div></div></div>
+<div id="touch"><div class="touchstick" id="stick"></div><div class="touchbuttons"><button data-key="z">FLIP</button><button data-key="x">SHUV</button><button data-key="c">360</button><button data-key=" ">OLLIE</button></div></div>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+
+// Concrete Dreams — a compact, fully playable arcade skate session.
+const mount=document.querySelector('#game');
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x9ca8ac);scene.fog=new THREE.Fog(0x9ca8ac,38,100);
+const camera=new THREE.PerspectiveCamera(54,innerWidth/innerHeight,.1,180);camera.position.set(0,13,31);camera.lookAt(0,0,0);
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;mount.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xe4f4ff,0x434149,2.1));const sun=new THREE.DirectionalLight(0xfff0d7,3.2);sun.position.set(-18,28,12);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-35;sun.shadow.camera.right=35;sun.shadow.camera.top=35;sun.shadow.camera.bottom=-35;scene.add(sun);
+const mat=(color,rough=.8,metal=0)=>new THREE.MeshStandardMaterial({color,roughness:rough,metalness:metal});
+const concrete=mat(0x92979a),pale=mat(0xb9b8ad),dark=mat(0x333943),edge=mat(0x565c63),pink=mat(0xff4e83,.38,.35),cyan=mat(0x59e2df,.36,.25),lime=mat(0xd8ff58,.35,.15),wood=mat(0xb9824e),black=mat(0x171b21,.65,.1);
+function box(parent,x,y,z,sx,sy,sz,material,cast=true){const o=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),material);o.position.set(x,y,z);o.castShadow=cast;o.receiveShadow=true;parent.add(o);return o}
+function cylinder(parent,x,y,z,r1,r2,h,material,segments=12,rotX=0){const o=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,segments),material);o.position.set(x,y,z);o.rotation.x=rotX;o.castShadow=true;o.receiveShadow=true;parent.add(o);return o}
+const ground=box(scene,0,-.35,0,66,.7,66,concrete,false);ground.receiveShadow=true;
+// Skatepark perimeter and painted court lines.
+box(scene,0,.03,-25,45,.08,.14,pale,false);box(scene,0,.03,25,45,.08,.14,pale,false);box(scene,-25,.03,0,.14,.08,45,pale,false);box(scene,25,.03,0,.14,.08,45,pale,false);
+for(let i=-20;i<=20;i+=5){box(scene,i,.008,0,.035,.012,44,mat(0xa6aaab),false)}
+function ramp(name,x,z,w,depth,height,rot=0){
+ // Wedge deck with a clean rideable sloped surface; collision uses a matching raycast mesh.
+ const group=new THREE.Group();group.position.set(x,0,z);group.rotation.y=rot;scene.add(group);
+ const points=[new THREE.Vector2(-depth/2,0),new THREE.Vector2(depth/2,0),new THREE.Vector2(depth/2,height)];
+ const shape=new THREE.Shape(points);const geo=new THREE.ExtrudeGeometry(shape,{depth:w,bevelEnabled:false});geo.rotateY(Math.PI/2);geo.translate(-w/2,0,0);
+ const body=new THREE.Mesh(geo,wood);body.castShadow=true;body.receiveShadow=true;group.add(body);
+ const surfGeo=new THREE.BufferGeometry();const verts=new Float32Array([-w/2,height,-depth/2,w/2,height,-depth/2,-w/2,0,depth/2,w/2,0,depth/2]);surfGeo.setAttribute('position',new THREE.BufferAttribute(verts,3));surfGeo.setIndex([0,2,1,1,2,3]);surfGeo.computeVertexNormals();const surface=new THREE.Mesh(surfGeo,new THREE.MeshStandardMaterial({color:0xb8b3a5,roughness:.72,side:THREE.DoubleSide}));surface.castShadow=true;surface.receiveShadow=true;group.add(surface);surface.userData.ramp=true;ramps.push(surface);
+ box(group,0,.09,-depth/2,w,.18,.18,edge);box(group,0,height-.03,depth/2,w,.12,.15,cyan);
+ return group;
+}
+const ramps=[];
+// Four mellow banks and a broad center hip create lines across the whole plaza.
+ramp('north bank',0,-13,10,8,2.5,0);ramp('south bank',0,13,10,8,2.5,Math.PI);ramp('west bank',-14,0,9,8,2.4,Math.PI/2);ramp('east bank',14,0,9,8,2.4,-Math.PI/2);
+ramp('center kicker',0,0,8,6,1.8,Math.PI/4);
+// Long raised ledges and grind rails, with metal caps and visible posts.
+const rails=[];
+function rail(x,z,length,rot=0,y=.86){const g=new THREE.Group();g.position.set(x,y,z);g.rotation.y=rot;scene.add(g);cylinder(g,0,0,0,.105,.105,length,pink,10,Math.PI/2); // local cylinder axis becomes horizontal
+ const railbar=box(g,0,0,0,length,.14,.14,pink);railbar.rotation.y=Math.PI/2; // overwrite duplicate core with squared highlight shape
+ g.remove(g.children[0]);
+ for(const a of [-length*.37,length*.37]){box(g,a,-.43,0,.12,.86,.12,dark);box(g,a,-.84,0,.44,.12,.5,edge)}
+ rails.push({x,z,length,rot,y,bar:railbar});return g;
+}
+rail(-8,-3,8,Math.PI/2,.83);rail(8,3,8,Math.PI/2,.83);rail(0,8,10,0,.8);rail(0,-8,8,0,.82);
+// Funbox in the middle: low manual pad with coping.
+box(scene,0,.34,-4,5,.68,2,dark);box(scene,0,.72,-4,5.15,.12,2.1,pale);box(scene,0,.79,-5.05,5.25,.12,.12,cyan);
+// benches and park details
+function bench(x,z,rot=0){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rot;scene.add(g);box(g,0,.65,0,2.8,.15,.55,wood);for(const q of [-.9,.9])box(g,q,.31,0,.12,.62,.12,black)}bench(-18,-16,.2);bench(18,16,-.3);
+// Distant low-poly city blocks, poles, lamps and billboards.
+const cityMats=[mat(0x737d80),mat(0x646e72),mat(0x858d8d),mat(0x596469)];
+for(let i=0;i<20;i++){const a=i/20*Math.PI*2,r=38+(i%3)*3,h=5+(i*7%13);const x=Math.cos(a)*r,z=Math.sin(a)*r;const b=box(scene,x,h/2-0.1,z,4+(i%3),h,4+(i%4),cityMats[i%4],false);b.rotation.y=a*.3;for(let yy=1.5;yy<h-1;yy+=2.2)for(let xx=-1;xx<=1;xx+=2)box(scene,x+xx,yy,z+2.03,0.42,.65,.04,i%4===0?pink:mat(0xc5c2a8),false)}
+for(const x of [-21,21]){cylinder(scene,x,5,-18,.12,.12,10,dark);box(scene,x,9.8,-18,2.4,.15,.3,cyan,false)}
+// Board and skater model: custom color-block figure with articulated silhouette.
+const skater=new THREE.Group();scene.add(skater);const board=new THREE.Group();skater.add(board);
+box(board,0,.15,0,.48,.12,1.35,wood);box(board,0,.22,0,.44,.025,1.28,mat(0xff775d));
+for(const z of [-.42,.42]){box(board,0,.03,z,.53,.09,.08,black);for(const x of [-.22,.22]){const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.115,.115,.09,12),mat(0xece8dc,.55));wheel.rotation.z=Math.PI/2;wheel.position.set(x,.04,z);wheel.castShadow=true;board.add(wheel)}}
+const body=new THREE.Group();body.position.y=.38;skater.add(body);cylinder(body,0,.62,0,.22,.28,.62,black,10);const shirt=box(body,0,.65,0,.55,.63,.36,cyan);shirt.rotation.z=-.08;
+const head=new THREE.Mesh(new THREE.SphereGeometry(.24,16,12),mat(0xd59a73));head.position.set(0,1.16,0);head.castShadow=true;body.add(head);const cap=box(body,0,1.38,.04,.48,.12,.42,pink);cap.rotation.x=.1;
+for(const side of [-1,1]){const leg=box(body,side*.16,.18,side*.09,.18,.5,.18,dark);leg.rotation.z=side*.09;const arm=box(body,side*.34,.66,.02,.15,.5,.15,mat(0xd59a73));arm.rotation.z=side*.38}
+const shadow=new THREE.Mesh(new THREE.CircleGeometry(.65,24),new THREE.MeshBasicMaterial({color:0x101419,transparent:true,opacity:.32,depthWrite:false}));shadow.rotation.x=-Math.PI/2;shadow.position.y=.02;scene.add(shadow);
+
+const $=s=>document.querySelector(s),hud=$('#hud'),overlay=$('#overlay');
+const keys=new Set(),justPressed=new Set();let running=false,remaining=120,totalScore=0,comboScore=0,comboName='',comboTricks=[],airTime=0,airHeight=0,airSpin=0,grinding=false,grindRail=null,grindTime=0,groundTime=0,flashTimer=0;
+const player={x:0,z:19,y:0,vy:0,vx:0,vz:0,heading:Math.PI,groundY:0,grounded:true,ollieLock:0,grindLock:0};
+const ray=new THREE.Raycaster();ray.set(new THREE.Vector3(),new THREE.Vector3(0,-1,0));
+function surfaceAt(x,z){ray.ray.origin.set(x,32,z);ray.ray.direction.set(0,-1,0);const hits=ray.intersectObjects(ramps,false);return hits.length?Math.max(0,hits[0].point.y):0}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function fmt(n){return Math.floor(n).toLocaleString('en-US').padStart(6,'0')}
+function setComboTitle(text){$('#comboTitle').textContent=text;$('#combo').classList.add('show')}
+function addCombo(points,name){comboScore+=Math.round(points);if(name)comboName=name;$('#comboValue').textContent=`+${comboScore.toLocaleString()} PTS`;setComboTitle(comboName||'COMBO')}
+function bankCombo(){if(comboScore>0){totalScore+=comboScore;$('#score').textContent=fmt(totalScore);$('#trickfeed').innerHTML=`<div>${comboName} &nbsp; +${comboScore.toLocaleString()}</div>`;flashTimer=2.2}comboScore=0;comboTricks=[];comboName='';$('#combo').classList.remove('show')}
+const trickDefs={z:['KICKFLIP',250],x:['POP SHUVIT',220],c:['360 FLIP',500]};
+function doTrick(key){const t=trickDefs[key];if(!t||(!grinding&&player.grounded))return;const label=t[0];comboTricks.push(label);airSpin+=(key==='c'?Math.PI*2:key==='x'?Math.PI:Math.PI*2);const base=t[1]*(1+Math.min(comboTricks.length-1,4)*.55);addCombo(base,label);$('#trickfeed').innerHTML=`<div>${comboTricks.slice(-3).join('<br>')}</div>`;}
+function pressAction(key){if(key===' '){if((player.grounded||grinding)&&player.ollieLock<=0){if(grinding){grinding=false;player.grindLock=.7}player.grounded=false;player.vy=8.6;player.ollieLock=.28;airTime=0;airHeight=0;airSpin=0;if(!comboScore){comboTricks=[];comboName='';$('#trickfeed').innerHTML=''}}}else if(trickDefs[key])doTrick(key)}
+function startRun(){totalScore=0;remaining=120;comboScore=0;comboTricks=[];running=true;$('#score').textContent=fmt(0);$('#timer').textContent='2:00';$('#trickfeed').innerHTML='';overlay.style.display='none';hud.style.display='block';player.x=0;player.z=19;player.vx=player.vz=0;player.vy=0;player.y=0;player.grounded=true;player.heading=Math.PI;grinding=false;camera.position.set(0,9,29)}
+$('#startbtn').addEventListener('click',startRun);$('#restartbtn').addEventListener('click',startRun);
+window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();if([' ','arrowup','arrowdown','arrowleft','arrowright'].includes(k))e.preventDefault();if(!keys.has(k))justPressed.add(k);keys.add(k);if(!running&&(k==='enter'||k===' '))startRun()});
+window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>keys.clear());
+const stick=$('#stick');let stickPointer=null,stickVec={x:0,y:0};function stickMove(e){const r=stick.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),len=Math.hypot(dx,dy),scale=Math.min(1,len/43);stickVec={x:dx/(len||1)*scale,y:dy/(len||1)*scale}}
+stick.addEventListener('pointerdown',e=>{stickPointer=e.pointerId;stick.setPointerCapture(e.pointerId);stickMove(e)});stick.addEventListener('pointermove',e=>{if(e.pointerId===stickPointer)stickMove(e)});for(const ev of ['pointerup','pointercancel'])stick.addEventListener(ev,e=>{if(e.pointerId===stickPointer){stickPointer=null;stickVec={x:0,y:0}}});
+document.querySelectorAll('.touchbuttons button').forEach(b=>{const k=b.dataset.key;b.addEventListener('pointerdown',e=>{e.preventDefault();pressAction(k);keys.add(k)});for(const ev of ['pointerup','pointercancel','pointerleave'])b.addEventListener(ev,()=>keys.delete(k))});
+function getRail(x,z){let best=null,bestD=Infinity;for(const r of rails){const dx=x-r.x,dz=z-r.z,along=dx*Math.sin(r.rot)+dz*Math.cos(r.rot),across=dx*Math.cos(r.rot)-dz*Math.sin(r.rot);const d=Math.abs(across);if(Math.abs(along)<r.length/2-.2&&d<.48&&d<bestD){bestD=d;best=r}}return best}
+function update(dt){if(!running)return;
+ remaining=Math.max(0,remaining-dt);const secs=Math.ceil(remaining),mins=Math.floor(secs/60),ss=String(secs%60).padStart(2,'0');$('#timer').textContent=`${mins}:${ss}`;$('#runbar').style.transform=`scaleX(${remaining/120})`;if(remaining===0){finishRun();return}
+ const inputX=(keys.has('d')||keys.has('arrowright')?1:0)-(keys.has('a')||keys.has('arrowleft')?1:0)+stickVec.x;
+ const inputZ=(keys.has('s')||keys.has('arrowdown')?1:0)-(keys.has('w')||keys.has('arrowup')?1:0)+stickVec.y;
+ const mag=Math.hypot(inputX,inputZ),ix=mag>1?inputX/mag:inputX,iz=mag>1?inputZ/mag:inputZ;
+ const accel=player.grounded||grinding?22:8;player.vx+=ix*accel*dt;player.vz+=iz*accel*dt;
+ const maxSpeed=keys.has('shift')?7:13,spd=Math.hypot(player.vx,player.vz);if(spd>maxSpeed){player.vx*=maxSpeed/spd;player.vz*=maxSpeed/spd}
+ const drag=player.grounded?Math.exp(-(mag>.08?(keys.has('shift')?2.8:.65):2.25)*dt):Math.exp(-.08*dt);player.vx*=drag;player.vz*=drag;
+ player.x+=player.vx*dt;player.z+=player.vz*dt;player.x=clamp(player.x,-27,27);player.z=clamp(player.z,-27,27);
+ const floor=surfaceAt(player.x,player.z);player.groundY=floor;player.ollieLock=Math.max(0,player.ollieLock-dt);player.grindLock=Math.max(0,player.grindLock-dt);
+ const candidate=getRail(player.x,player.z);if(!grinding&&!player.grounded&&candidate&&player.y<candidate.y+1.25&&player.vy<2&&player.grindLock<=0&&spd>3){grinding=true;grindRail=candidate;player.vy=0;player.y=candidate.y+.16;grindTime=0;if(!comboScore){comboName='RAIL COMBO';comboTricks=[]}addCombo(100,'RAIL GRIND')}
+ if(grinding){grindTime+=dt;player.y=grindRail.y+.16;player.vy=0;const railDir=grindRail.rot;const direction=Math.sign(player.vx*Math.sin(railDir)+player.vz*Math.cos(railDir))||1;player.vx+=Math.sin(railDir)*direction*2.8*dt;player.vz+=Math.cos(railDir)*direction*2.8*dt;addCombo(115*dt,'RAIL GRIND');if(!candidate||candidate!==grindRail){grinding=false;player.grindLock=.35;player.vy=2.1;airTime=0;airSpin=0}}
+ else if(!player.grounded){airTime+=dt;airHeight=Math.max(airHeight,player.y-floor);player.vy-=19*dt;player.y+=player.vy*dt;if(player.y<=floor){player.y=floor;player.vy=0;player.grounded=true;groundTime=0;if(airTime>.1){if(comboScore){const clean=Math.max(1,Math.floor(1+airHeight*.26));addCombo(comboScore*(clean-1),'CLEAN LANDING')}if(comboScore)bankCombo();else if(airTime>.48){totalScore+=Math.round(airTime*85+airHeight*55);$('#score').textContent=fmt(totalScore)}}airTime=0;airHeight=0;airSpin=0}}
+ else{player.y=floor;groundTime+=dt;if(comboScore&&groundTime>1.3)bankCombo()}
+ if(justPressed.has(' '))pressAction(' ');for(const k of ['z','x','c'])if(justPressed.has(k))pressAction(k);justPressed.clear();
+ const speed=Math.hypot(player.vx,player.vz);if(speed>.25)player.heading=Math.atan2(player.vx,player.vz);
+ skater.position.set(player.x,player.y,player.z);skater.rotation.y=player.heading;board.rotation.set(0,0,0);if(!player.grounded&&!grinding){board.rotation.x=Math.sin(airSpin)*.05;board.rotation.y=airSpin;board.rotation.z=clamp(player.vy*.035,-.3,.3);body.rotation.z=Math.sin(airSpin)*.09}
+ if(grinding){skater.rotation.y=grindRail.rot+(player.vx*Math.sin(grindRail.rot)+player.vz*Math.cos(grindRail.rot)<0?Math.PI:0);board.rotation.z=.10}
+ shadow.position.set(player.x,.025,player.z);const shade=clamp(1-Math.max(0,player.y-floor)*.17,.23,.32);shadow.material.opacity=shade;const size=1+Math.max(0,player.y-floor)*.09;shadow.scale.set(size,size,size);
+ const camTarget=new THREE.Vector3(player.x*.35,2.4+player.y*.45,player.z*.35),camPos=new THREE.Vector3(player.x-player.vx*.48,9.5+player.y*.45,player.z+13.5-player.vz*.55);camera.position.lerp(camPos,1-Math.exp(-2.8*dt));camera.lookAt(camTarget);
+ $('#speed').textContent=String(Math.round(speed*3.6)).padStart(2,'0');if(flashTimer>0){flashTimer-=dt;if(flashTimer<=0)$('#trickfeed').innerHTML=''}
+}
+function finishRun(){running=false;bankCombo();hud.style.display='none';overlay.style.display='grid';$('#startpanel').style.display='none';$('#endpanel').style.display='block';$('#bestscore').textContent=fmt(totalScore);$('#endcopy').textContent=totalScore>25000?'A plaza legend. That run was pure fire.':'Good lines, clean landings. The concrete remembers.'}
+let last=performance.now();function animate(now){requestAnimationFrame(animate);const dt=Math.min(.04,(now-last)/1000);last=now;update(dt);renderer.render(scene,camera)}requestAnimationFrame(animate);
+function resize(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)}window.addEventListener('resize',resize);
+</script>
+</body>
+</html>
+
